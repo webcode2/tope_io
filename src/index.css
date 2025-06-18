@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-white text-black dark:bg-gray-900 dark:text-white;
+  }
+}
