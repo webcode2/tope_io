@@ -4,7 +4,11 @@ export default {
     darkMode: 'class',
     theme: {
 
-        extend: {},
+        extend: {
+            backgroundImage: {
+                'notice-board': "url('/public/Rectangle.png')",
+            }
+        },
     },
     plugins: [],
 };

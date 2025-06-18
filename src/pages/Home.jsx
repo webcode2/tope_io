@@ -12,29 +12,28 @@ export default function IoTNoticeBoardLanding() {
 
             <main className="">
                 {/* Hero Section */}
-                <section className="w-full min-h-screen bg-gray-100   ">
+                <div className="bg-[url('/Rectangle.png')] bg-no-repeat lg:bg-right-top">
+                    <section className="w-full lg:-h-screen  py-32 bg-gray-600/70 inset-0">
                     <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-10">
 
-                        <div className="w-full md:w-6/12 flex justify-center items-center flex-col pt-20 md:pt-0 md:order-1">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-6 md:hidden">Smarter Public Messaging with IoT</h1>
-                            <p className="text-base md:text-lg mb-8 md:hidden">
+                            <div className="w-full md:w-6/12 flex justify-center items-center flex-col pt-10 md:pt-0 md:order-1 text-white">
+                                <h1 className="text-4xl md:text-5xl font-bold mb-6 md:hidden leading-tight text-center md:text-start">Smarter Public Messaging with IoT</h1>
+                                <p className="text-base md:text-lg mb-8 md:hidden text-center">
                                 A solar-powered, remotely managed digital notice board for universities and public spaces.
                             </p>
 
-                            <img src="\Rectangle.png" alt="Notice Board Mockup" className="w-3/5 " />
                         </div>
-                        <div className="flex flex-col sm:flex-row w-full gap-4 md:hidden mt-10">
-                            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg">Request Demo</button>
-                            <button className="border border-gray-300 px-6 py-3 rounded-lg">See It Live</button>
-                        </div>
-                        <div className="max-w-xl mb-10 md:mb-0 hidden md:block">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-6">Smarter Public Messaging with IoT</h1>
-                            <p className="text-base md:text-lg mb-8">
+
+
+
+                            <div className="max-w-xl mb-10 md:mb-0 w-full mt-10 md:mt-0">
+                                <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white  hidden md:block">Smart Public Messaging with IoT</h1>
+                                <p className="text-base md:text-lg mb-8 text-gray-300  hidden md:block  ">
                                 A solar-powered, remotely managed digital notice board for universities and public spaces.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4 w-full">
                                 <button className="bg-blue-600 text-white px-6 py-3 rounded-lg">Request Demo</button>
-                                <button className="border border-gray-300 px-6 py-3 rounded-lg">See It Live</button>
+                                    <button className="border border-black px-6 py-3 rounded-lg">See It Live</button>
                             </div>
                         </div>
 
@@ -42,6 +41,7 @@ export default function IoTNoticeBoardLanding() {
 
                 </section>
 
+                </div>
                 {/* Features Section */}
                 <section id="features" className="px-6 md:px-10 py-20 bg-white">
                     <h2 className="text-3xl font-semibold text-center mb-12">Core Features</h2>
