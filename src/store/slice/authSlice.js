@@ -3,6 +3,7 @@ import axios from "axios";
 
 const SERVER_URL = `http://localhost:4000/`
 
+
 // Thunk to fetch data from API
 export const loginAccount = createAsyncThunk(
     'auth/loginAccount',
