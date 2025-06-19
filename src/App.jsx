@@ -16,6 +16,7 @@ import MessageLogs from "./pages/systemLogs";
 import BoardStatus from "./pages/BoardStatus";
 import PostMessage from "./pages/newPost";
 import DashBoardIndex from "./pages/dashBoardIndex";
+import ErrorPage from "./pages/error";
 
 
 
@@ -55,6 +56,7 @@ let router = createBrowserRouter([
 
         ],
       },
+      { path: "*", Component: ErrorPage }
     ]
   },
 
