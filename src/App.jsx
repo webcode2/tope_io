@@ -28,7 +28,8 @@ let router = createBrowserRouter([
 
       { index: true, Component: Home },
       {
-        path: "new/", Component: UserDashboard, children: [
+        path: "new/", Component: UserDashboard,
+        children: [
 
           { index: true, Component: DashBoardIndex },
           { path: "new-post", Component: PostMessage },
@@ -52,7 +53,6 @@ let router = createBrowserRouter([
         Component: ProtctedScreens,
         children: [
           { index: true, Component: AdminInterface },
-          { path: "admin", Component: UserDashboard },
 
         ],
       },
