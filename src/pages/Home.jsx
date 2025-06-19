@@ -110,7 +110,7 @@ export default function IoTNoticeBoardLanding() {
 
                 {/* Call to Action */}
                 <section id="contact" className="px-6 md:px-10 py-24 bg-yellow-100 text-center relative overflow-y-hidden">
-                    <img src="/Rectangle.png" className="md:w-3/12 lg:absolute right-0 -top-0" />
+                    <img src="/Rectangle.png" className="hidden lg:block md:w-3/12 lg:absolute right-0 -top-0" />
                     <h2 className="text-3xl font-semibold mb-6 z-30">Ready to Modernize Your Notice Board?</h2>
                     <p className="mb-8">Experience the future of public communication with our smart display solution.</p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
