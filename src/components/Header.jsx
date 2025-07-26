@@ -23,7 +23,6 @@ function Header({ setMenuOpen, menuOpen }) {
                     <a href="#how" className="hover:text-blue-600">How It Works</a>
                     <a href="#usecases" className="hover:text-blue-600">Use Cases</a>
                     <a href="#contact" className="hover:text-blue-600">Contact</a>
-                    <Link to={"/new"} className="hover:text-blue-600">admin</Link>
                     <div className="ml-20">
                         <Link to={"auth/login"} className=" font-bold text-sm"> Login
                         </Link>&nbsp;
