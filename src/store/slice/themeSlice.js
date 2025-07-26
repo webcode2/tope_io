@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   darkMode: false,
+  newMessageModal: false
 };
 
 const themeSlice = createSlice({
@@ -13,8 +14,11 @@ const themeSlice = createSlice({
 
       state.darkMode = !state.darkMode;
     },
+    toggleNewMessageModal: (state, actions) => {
+      state.newMessageModal = actions.payload;
+    },
   },
 });
 
-export const { toggleDarkMode } = themeSlice.actions;
+export const { toggleDarkMode, toggleNewMessageModal } = themeSlice.actions;
 export default themeSlice.reducer;

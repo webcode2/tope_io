@@ -1,21 +1,23 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
+import Card from "../components/card";
 
 
 function DashBoardIndex() {
     return (
-        <div>
+        <div className="space-y-7">
+            <Card title="Summary">
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {[
-                    { label: 'Active Boards', value: 3, color: 'bg-blue-100 text-blue-600' },
-                    { label: 'Messages Sent', value: 128, color: 'bg-green-100 text-green-600' },
-                    { label: 'Pending Alerts', value: 2, color: 'bg-yellow-100 text-yellow-600' },
-                    { label: 'System Uptime', value: '99.9%', color: 'bg-purple-100 text-purple-600' },
+                        { label: 'Active Boards', value: 3, color: 'bg-white text-black' },
+                        { label: 'Messages Sent', value: 128, color: 'bg-white text-black' },
+                        { label: 'Pending Alerts', value: 2, color: 'bg-white text-black' },
+                        { label: 'System Uptime', value: '99.9%', color: 'bg-white text-black' },
                 ].map((card, i) => (
                     <motion.div
                         key={i}
-                        className={`rounded-xl p-5 shadow hover:shadow-lg transition ${card.color}`}
+                        className={`rounded-xl p-5 shadow hover:shadow-md border-gray-50 border transition ${card.color}`}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: i * 0.1 }}
@@ -25,10 +27,10 @@ function DashBoardIndex() {
                     </motion.div>
                 ))}
             </div>
-
-            {/* Message Log Table */}
+            </Card>
+            <Card title="Messages">          {/* Message Log Table */}
             <motion.div
-                className="bg-white rounded-xl shadow overflow-hidden"
+                    className="bg-white  overflow-hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -57,6 +59,8 @@ function DashBoardIndex() {
                     </tbody>
                 </table>
             </motion.div>
+            </Card>
+
         </div>
     )
 }

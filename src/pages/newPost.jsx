@@ -1,39 +1,55 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
+import { useDispatch, } from "react-redux";
+import { toggleNewMessageModal } from "../store/slice/themeSlice";
+import Card from "../components/card";
 
 export default function PostMessage() {
-    const [message, setMessage] = useState('');
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // TODO: Send message to board
-        console.log('Message submitted:', message);
-    };
+    const dispatch = useDispatch()
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4 text-blue-700">Post Message</h1>
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
-                <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                        Message Content
-                    </label>
-                    <textarea
-                        id="message"
-                        rows={4}
-                        required
-                        className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring focus:border-blue-500"
-                        placeholder="Enter your message..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-                >
-                    Send Message
+        <div className="">
+            {/* Message Log Table */}
+
+
+            <Card>                <div className="flex justify-between items-center mb-20">
+                <p className="title font-bold text-2xl text-gray-600  py-4 text-center ">Message</p>
+
+                <button onClick={() => { dispatch(toggleNewMessageModal(true)) }} className="bg-blue-300 text-blue-700 px-4 py-3 rounded-lg mb-3  place-self-end cursor-pointer">
+                    Add new Message
                 </button>
-            </form>
+                </div>
+                <motion.div
+                    className=" overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <table className="min-w-full text-sm text-left">
+                        <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-xs">
+                            <tr>
+                                <th className="px-6 py-3">Time</th>
+                                <th className="px-6 py-3">Message</th>
+                                <th className="px-6 py-3">Board</th>
+                                <th className="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[
+                                { time: '10:34 AM', message: 'Welcome to RSU', board: 'Main Gate', status: 'Sent' },
+                                { time: '9:20 AM', message: 'Exam Timetable Uploaded', board: 'Faculty Board', status: 'Sent' },
+                            ].map((log, i) => (
+                                <tr key={i} className="border-t border-gray-300 hover:bg-gray-50">
+                                    <td className="px-6 py-4">{log.time}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-900">{log.message}</td>
+                                    <td className="px-6 py-4 text-gray-700">{log.board}</td>
+                                    <td className="px-6 py-4 text-green-600 font-semibold">{log.status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </motion.div>
+            </Card>
         </div>
     );
 }

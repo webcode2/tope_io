@@ -13,10 +13,10 @@ import ResetPassword from "./pages/auth/foget_newpost";
 import UserDashboard from "./pages/newAdmin";
 import Settings from "./pages/Settings";
 import MessageLogs from "./pages/systemLogs";
-import BoardStatus from "./pages/BoardStatus";
 import PostMessage from "./pages/newPost";
 import DashBoardIndex from "./pages/dashBoardIndex";
 import ErrorPage from "./pages/error";
+import Profile from "./pages/prodile";
 
 
 
@@ -28,14 +28,13 @@ let router = createBrowserRouter([
 
       { index: true, Component: Home },
       {
-        path: "new/", Component: UserDashboard,
+        path: "dashboard/", Component: UserDashboard,
         children: [
 
           { index: true, Component: DashBoardIndex },
           { path: "new-post", Component: PostMessage },
-          { path: "settings", Component: Settings },
-          { path: "logs", Component: MessageLogs },
-          { path: "status", Component: BoardStatus },
+
+          { path: "profile", Component: Profile },
         ]
       },
 
@@ -48,14 +47,7 @@ let router = createBrowserRouter([
           { path: "forget-password", Component: ResetPassword },
         ],
       },
-      {
-        path: "app/",
-        Component: ProtctedScreens,
-        children: [
-          { index: true, Component: AdminInterface },
 
-        ],
-      },
       { path: "*", Component: ErrorPage }
     ]
   },

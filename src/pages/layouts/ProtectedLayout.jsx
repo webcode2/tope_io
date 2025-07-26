@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 // import Header from "../../components/Header";
@@ -6,6 +6,7 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer } from "react-toastify";
 import { checkIfAuthenticated } from "../../store/slice/authSlice";
 import Modal from "../../components/Modal";
+import PostMessageModal from "../../components/newPost.Modal";
 
 
 export function ProtctedScreens() {
@@ -48,6 +49,8 @@ export function ProtctedScreens() {
     if (!isAuthenticated) { return null }
 
 
+  
+
     return (<div className="relative">
         <Outlet />
         {/* <Modal /> */}
@@ -62,6 +65,7 @@ export function ProtctedScreens() {
             theme="light"
             transition={Bounce}
         />
+       
 
     </div>)
 }
