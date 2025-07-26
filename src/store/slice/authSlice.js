@@ -14,6 +14,7 @@ export const loginAccount = createAsyncThunk(
             })
             return user.status === 200 ? user.data : rejectWithValue("something Went wrong")
         } catch (err) {
+
             return rejectWithValue(err.response.data);
         }
     }
@@ -55,13 +56,34 @@ export const checkIfAuthenticated = createAsyncThunk(
     }
 )
 
+// Thunk to fetch devices for the authenticated user
+export const fetchDevices = createAsyncThunk(
+    'auth/fetchDevices',
+    async (_, { getState, rejectWithValue }) => {
+        console.log("Fetching devices...");
+        try {
+            const token = getState().auth.user?.details?.token;
+            if (!token) return rejectWithValue("No authentication token found");
+            const res = await axios.get(`${SERVER_URL}api/iot/devices`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log(res.data)
+            return res.status === 200 ? res.data : rejectWithValue("Failed to fetch devices");
+        } catch (err) {
+            console.log(err)
+            return rejectWithValue(err.response?.data?.message || "Failed to fetch devices");
+        }
+    }
+);
+
 const saveToLocalStorage = ({ name, _ }) => {
     localStorage.setItem(name, JSON.stringify(_))
 }
 
 const initialState = {
     isAuthenticated: false,
-    user: { device: null, details: null },
+    user: { details: null, device: [] }, // <-- Ensure device is in user
+    devices: { items: [], isLoading: false, error: null },
     isLoading: false,
     error: null,
 
@@ -100,7 +122,7 @@ const authSlice = createSlice({
             })
             .addCase(loginAccount.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload;
+                state.error = action.payload || "Login failed. Please check your credentials and try again.";
             })
             // Check if authenticated cases
             .addCase(checkIfAuthenticated.pending, (state) => {
@@ -114,7 +136,14 @@ const authSlice = createSlice({
             })
             .addCase(checkIfAuthenticated.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload;
+                // Only store a string message, not the whole object
+                if (typeof action.payload === "string") {
+                    state.error = action.payload;
+                } else if (action.payload && typeof action.payload === "object" && action.payload.message) {
+                    state.error = action.payload.message;
+                } else {
+                    state.error = "Authentication check failed.";
+                }
             })
             //  For Registration
             .addCase(registerAccount.pending, (state) => {
@@ -137,9 +166,21 @@ const authSlice = createSlice({
                 saveToLocalStorage({ _: state.user.details, name: "userDeails" })
             })
             .addCase(registerAccount.rejected, (state, action) => {
-                state.error = action.payload
-                state.isLoading = false
-
+                state.error = action.payload || "Registration failed. Please try again.";
+                state.isLoading = false;
+            })
+            // Fetch Devices
+            .addCase(fetchDevices.pending, (state) => {
+                state.devices.isLoading = true;
+                state.error = null;
+            })
+            .addCase(fetchDevices.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.devices.items = action.payload; // 
+            })
+            .addCase(fetchDevices.rejected, (state, action) => {
+                state.isLoading = false;
+                state.devices.error = action.payload || "Failed to fetch devices";
             })
 
     }

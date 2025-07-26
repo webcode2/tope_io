@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Home,
     PencilLine,
@@ -11,8 +11,11 @@ import {
     X,
     UserCog,
 } from 'lucide-react';
-import { Link, NavLink, Outlet } from "react-router-dom";
-import PostMessageModal from "../components/newPost.Modal";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import PostMessageModal from "../components/newPostModal";
+import { Bounce, ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { checkIfAuthenticated } from "../store/slice/authSlice";
 
 const navItems = [
     { label: 'Dashboard', to: "", icon: <Home size={18} /> },
@@ -22,19 +25,29 @@ const navItems = [
 ];
 
 export default function UserDashboard() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    console.log(user)
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [message, setMessage] = useState("");
+    const [authChecked, setAuthChecked] = useState(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Message submitted:", message);
-        setMessage("");
-        setIsOpen(false);
-    };
+    useEffect(() => {
+        // Dispatch and wait for the check to finish
+        dispatch(checkIfAuthenticated()).finally(() => setAuthChecked(true));
+    }, [dispatch]);
 
+    useEffect(() => {
+        if (authChecked && !isAuthenticated) {
+            navigate('/auth/login');
+        }
+    }, [isAuthenticated, authChecked, navigate]);
 
+    // Don't render anything until auth check is complete
+    if (!authChecked) return null;
+
+    if (!isAuthenticated) return null;
 
     return (
         <div className="min-h-screen flex bg-gradient-to-br from-slate-100 to-white">
@@ -123,18 +136,27 @@ export default function UserDashboard() {
                     transition={{ duration: 0.4 }}
                     className="mb-6"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome, Admin</h1>
-                    <p className="text-sm text-gray-500">Last login: June 18, 2025</p>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome {user.details?.name}</h1>
+                    <p className="text-sm text-gray-500">{user.details?.registeredAt}</p>
                 </motion.div>
 
                 <Outlet />
 
             </main>
-            <PostMessageModal
-                handleSubmit={handleSubmit}
-                message={message}
-                setMessage={setMessage}
+            < ToastContainer position="top-right" autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
             />
+
+
+            <PostMessageModal />
         </div>
     );
 }

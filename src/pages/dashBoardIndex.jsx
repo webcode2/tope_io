@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from "../components/card";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMessages } from "../store/slice/messageSlice";
+import MessageTable from "../components/MessageTable";
 
 
 function DashBoardIndex() {
+
+    const dispatch = useDispatch();
+    // Get messages from Redux store
+    const messages = useSelector(state => state.message.messages);
+    const isLoading = useSelector(state => state.message.isLoading);
+    useEffect(() => {
+
+        // Fetch messages or perform any side effects here
+        if (!messages.length && !isLoading) {
+            // Optionally dispatch an action to fetch messages
+            dispatch(fetchMessages());
+        }
+    }, [dispatch, messages.length, isLoading]);
     return (
         <div className="space-y-7">
             <Card title="Summary">
@@ -29,36 +45,7 @@ function DashBoardIndex() {
             </div>
             </Card>
             <Card title="Messages">          {/* Message Log Table */}
-            <motion.div
-                    className="bg-white  overflow-hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-            >
-                <table className="min-w-full text-sm text-left">
-                    <thead className="bg-gray-50 border-b text-gray-600 uppercase text-xs">
-                        <tr>
-                            <th className="px-6 py-3">Time</th>
-                            <th className="px-6 py-3">Message</th>
-                            <th className="px-6 py-3">Board</th>
-                            <th className="px-6 py-3">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            { time: '10:34 AM', message: 'Welcome to RSU', board: 'Main Gate', status: 'Sent' },
-                            { time: '9:20 AM', message: 'Exam Timetable Uploaded', board: 'Faculty Board', status: 'Sent' },
-                        ].map((log, i) => (
-                            <tr key={i} className="border-t hover:bg-gray-50">
-                                <td className="px-6 py-4">{log.time}</td>
-                                <td className="px-6 py-4 font-medium text-gray-900">{log.message}</td>
-                                <td className="px-6 py-4 text-gray-700">{log.board}</td>
-                                <td className="px-6 py-4 text-green-600 font-semibold">{log.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </motion.div>
+                <MessageTable />
             </Card>
 
         </div>

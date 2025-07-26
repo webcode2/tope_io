@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkIfAuthenticated, loginAccount } from "../../store/slice/authSlice";
+import { checkIfAuthenticated, clearError, loginAccount } from "../../store/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
-
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const authError = useSelector(state => state.auth.error); // <-- Add this line
 
     const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
@@ -16,12 +16,14 @@ export default function Login() {
     useEffect(() => {
         dispatch(checkIfAuthenticated())
     }, [])
+
     useEffect(() => {
 
         if (isAuthenticated) {
-            navigate("/records")
+            navigate("/dashboard")
         }
-    }, [isAuthenticated, navigate])
+        return () => { dispatch(clearError()) }
+    }, [isAuthenticated, navigate, dispatch])
 
 
 
@@ -49,6 +51,13 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+
+                {/* Show authentication error from Redux */}
+                {authError && (
+                    <div className="mb-4 text-red-600 text-center text-sm font-medium">
+                        {authError}
+                    </div>
+                )}
 
                 <div className="mb-4">
                     <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>

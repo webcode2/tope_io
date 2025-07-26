@@ -43,7 +43,6 @@ function Header({ setMenuOpen, menuOpen }) {
                     <a href="#how" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>How It Works</a>
                     <a href="#usecases" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>Use Cases</a>
                     <a href="#contact" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>Contact</a>
-                    <Link to={"/new"} className="hover:text-blue-600">admin</Link>
 
                     <div className="flex flex-col items-start justify-start  w-full">
                         <Link to={"auth/login"} className=" font-bold text-sm"> Login
