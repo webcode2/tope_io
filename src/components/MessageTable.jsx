@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteMessage, updateMessage } from "../store/slice/messageSlice";
+import { deleteMessage, } from "../store/slice/messageSlice";
 
 import { motion } from "framer-motion";
 import { newMessageModalUpdateR, toggleNewMessageModal } from "../store/slice/themeSlice";

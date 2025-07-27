@@ -22,6 +22,12 @@ export default function PostMessage() {
     console.log(messages)
     return (
         <div className="">
+            <motion.div
+                className="overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
             <Card>
                 <div className="flex justify-between items-center mb-20">
                     <p className="title font-bold text-2xl text-gray-600 py-4 text-center">Message</p>
@@ -69,6 +75,7 @@ export default function PostMessage() {
                     </table> */}
                 <MessageTable />
             </Card>
+            </motion.div>
         </div>
     );
 }

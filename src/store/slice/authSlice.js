@@ -27,10 +27,8 @@ export const registerAccount = createAsyncThunk(
             const user = await axios.post(`${SERVER_URL}api/auth/register/`, { ...data, name: data.username }, {
                 headers: { "Content-Type": "application/json" }
             })
-            console.log(user.status)
             return user.status === 201 ? user.data : rejectWithValue("something Went wrong")
         } catch (err) {
-            console.log(err);
 
             return rejectWithValue(err.response.data);
         }
@@ -60,17 +58,14 @@ export const checkIfAuthenticated = createAsyncThunk(
 export const fetchDevices = createAsyncThunk(
     'auth/fetchDevices',
     async (_, { getState, rejectWithValue }) => {
-        console.log("Fetching devices...");
         try {
             const token = getState().auth.user?.details?.token;
             if (!token) return rejectWithValue("No authentication token found");
             const res = await axios.get(`${SERVER_URL}api/iot/devices`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(res.data)
             return res.status === 200 ? res.data : rejectWithValue("Failed to fetch devices");
         } catch (err) {
-            console.log(err)
             return rejectWithValue(err.response?.data?.message || "Failed to fetch devices");
         }
     }
@@ -83,7 +78,12 @@ const saveToLocalStorage = ({ name, _ }) => {
 const initialState = {
     isAuthenticated: false,
     user: { details: null, device: [] }, // <-- Ensure device is in user
-    devices: { items: [], isLoading: false, error: null },
+    devices: {
+
+        items: [],
+        isLoading: false,
+        error: null
+    },
     isLoading: false,
     error: null,
 
@@ -97,7 +97,44 @@ const authSlice = createSlice({
         setUser: (state, action) => { state.user = action.payload },
 
         logOut: (state,) => { return state = initialState },
-        clearError: (state) => { state.error = null }
+        clearError: (state) => { state.error = null },
+
+        updateDeviceStatus: (state, action) => {
+
+            const devicesToUpdate = action.payload; // This is an array
+
+            devicesToUpdate.forEach(({ deviceId, status }) => {
+
+                const device = state.devices.items.find((d) => d.id === deviceId);
+
+                if (device) {
+                    device.status = status;
+                }
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -186,5 +223,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { setUser, logOut, clearError } = authSlice.actions;
+export const { setUser, logOut, clearError, updateDeviceStatus } = authSlice.actions;
 export default authSlice.reducer;

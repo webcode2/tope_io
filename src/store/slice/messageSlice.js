@@ -83,7 +83,6 @@ export const updateMessage = createAsyncThunk(
     async ({ id, message }, { rejectWithValue, getState }) => {
         try {
             const token = getState().auth.user?.details?.token;
-            console.log(message)
             const res = await axios.put(
                 `${SERVER_URL}api/messages/${id}`,
                 { message },
@@ -118,6 +117,7 @@ const messageSlice = createSlice({
             state.error = null;
             state.success = false;
         },
+     
     },
     extraReducers: (builder) => {
         builder

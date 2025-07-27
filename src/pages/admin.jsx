@@ -36,18 +36,15 @@ export default function AdminInterface() {
             });
 
             socket.on("disconnect", () => {
-                console.log("Disconnected from socket server");
             });
 
             socket.on("sendAdmin", (data) => {
-                console.log(data)
 
                 dispatch(logNewUser(data))
             })
 
 
             socket.on("SERVER_EVENT", (data) => {
-                console.log(data)
 
             })
         }

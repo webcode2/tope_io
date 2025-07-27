@@ -17,7 +17,6 @@ export function createSocketConnection({token}) {
 export function disconnectSocket() {
   if (socket) {
     socket.disconnect();
-    console.log("Socket connection cleaned up");
   }
 }
 

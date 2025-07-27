@@ -1,15 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Card from "../components/card";
-import { Pencil, Users, Copy } from 'lucide-react';
+import { Pencil, Users, Copy, WifiIcon, WifiOffIcon } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDevices } from "../store/slice/authSlice";
+import getWebSocketClient from '../websocket/websocketClient';
 
 function Profile() {
     // Get user details from Redux
     const dispatch = useDispatch()
     const userDetails = useSelector(state => state.auth.user?.details);
     const { items, isLoading, error } = useSelector(state => state.auth.devices);
+
+    const wsUrl = `ws://localhost:4000/ws?token=${userDetails?.token || ''}`;
+    const wsClient = getWebSocketClient(wsUrl);
+
+    // Sync devices function
+    const handleSync = (deviceId) => {
+        wsClient.send({
+            event: "direct_message",
+            data: {
+                recipientId: deviceId, message: { action: "sync_device", }
+            }
+
+        });
+    };
 
     // Fallbacks if details are missing
     const user = {
@@ -21,6 +36,8 @@ function Profile() {
             : "N/A",
         location: userDetails?.location || "Port Harcourt, Nigeria", // Update if you store location
     };
+
+
 
     // Devices array from userDetails, fallback to empty array
     const devices = items || []
@@ -113,6 +130,8 @@ function Profile() {
                                 <th className="px-6 py-3">Device Name</th>
                                 <th className="px-6 py-3">Device ID</th>
                                 <th className="px-6 py-3">JWT</th>
+                                <th className="px-6 py-3">Restart Device</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -143,9 +162,20 @@ function Profile() {
                                                 <span className="text-green-600 text-xs ml-1">Copied!</span>
                                             )}
                                         </td>
+                                        <td className="px-6 py-4 ">
+                                            <div className="flex">
+                                                {!device.status ? (<WifiOffIcon className="text-gray-500 mr-3" />
+                                                ) : (
+                                                    <WifiIcon className="text-green-500 mr-3" />
+
+                                                )}
+
+                                                <button onClick={() => handleSync(device.id)} className="px-2 bg-amber-500 py-1  rounded">Sync devices</button>
+                                            </div>
+                                        </td>
                                     </tr>
-                                ))
-                            )}
+                                )))
+                            }
                         </tbody>
                     </table>
                 </motion.div>

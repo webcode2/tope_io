@@ -1,11 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     Home,
     PencilLine,
-    ClipboardList,
-    Monitor,
-    Settings,
     LogOut,
     Menu,
     X,
@@ -15,7 +12,8 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import PostMessageModal from "../components/newPostModal";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { checkIfAuthenticated } from "../store/slice/authSlice";
+import { checkIfAuthenticated, updateDeviceStatus } from "../store/slice/authSlice";
+import getWebSocketClient from '../websocket/websocketClient';
 
 const navItems = [
     { label: 'Dashboard', to: "", icon: <Home size={18} /> },
@@ -28,15 +26,25 @@ export default function UserDashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated, user } = useSelector((state) => state.auth);
-    console.log(user)
+    const { items } = useSelector((state) => state.auth.devices);
+
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [authChecked, setAuthChecked] = useState(false);
+    const [wsMessages, setWsMessages] = useState([]);
+    const [wsStatus, setWsStatus] = useState('disconnected');
+
+    const wsUrl = `ws://localhost:4000/ws?token=${user.details?.token || ''}`;
+    const wsClientRef = useRef(null);
+    const pingIntervalRef = useRef(null);
+
 
     useEffect(() => {
         // Dispatch and wait for the check to finish
         dispatch(checkIfAuthenticated()).finally(() => setAuthChecked(true));
     }, [dispatch]);
+
+
 
     useEffect(() => {
         if (authChecked && !isAuthenticated) {
@@ -44,8 +52,98 @@ export default function UserDashboard() {
         }
     }, [isAuthenticated, authChecked, navigate]);
 
+    useEffect(() => {
+        if (!isAuthenticated) return;
+
+        let wsClient = null;
+        let retryTimeout = null;
+        let isConnected = false;
+
+        const connectWebSocket = () => {
+            console.log('Attempting WebSocket connection...');
+            wsClient = getWebSocketClient(wsUrl);
+            wsClientRef.current = wsClient;
+            wsClient.connect();
+
+            wsClient.on('open', () => {
+                console.log("WebSocket connected");
+                isConnected = true;
+                setWsStatus('connected');
+
+                if (retryTimeout) {
+                    clearTimeout(retryTimeout);
+                    retryTimeout = null;
+                }
+            });
+
+            wsClient.on('close', () => {
+                console.log("WebSocket closed");
+                isConnected = false;
+                setWsStatus('disconnected');
+                scheduleReconnect();
+            });
+
+            wsClient.on('error', (err) => {
+                console.error("WebSocket error", err);
+                setWsStatus('error');
+                isConnected = false;
+                scheduleReconnect();
+            });
+
+            wsClient.on('message', (msg) => {
+                const { event, data } = msg;
+
+                switch (event) {
+                    case "direct_message":
+                        // handle direct message
+                        break;
+                    case "heart_beat":
+                        dispatch(updateDeviceStatus(data));
+                        break;
+                    default:
+                        break;
+                }
+            });
+        };
+
+        const scheduleReconnect = () => {
+            if (!isConnected && !retryTimeout) {
+                retryTimeout = setTimeout(() => {
+                    connectWebSocket();
+                }, 3000);
+            }
+        };
+
+        connectWebSocket();
+
+        return () => {
+            if (wsClient) wsClient.close();
+            if (retryTimeout) clearTimeout(retryTimeout);
+        };
+    }, [isAuthenticated, wsUrl, user.details?.id, user.details?.account_id]);
+
+    // Resposible for checkmating gthe devices
+
+    useEffect(() => {
+        const ids = items.map((device) => device.id)
+        pingIntervalRef.current = setInterval(() => {
+            const data = { ...user.details, token: undefined, registeredAt: undefined }
+            wsClientRef.current.send({
+                "event": "heart_beat",
+                "data": { user: data, devices: ids }
+            })
+        }, 5000); // every 10 seconds
+        return () => {
+            clearInterval(pingIntervalRef.current);
+        }
+    }, [items])
+
+
+
+
+
+
     // Don't render anything until auth check is complete
-    if (!authChecked) return null;
 
     if (!isAuthenticated) return null;
 
@@ -90,7 +188,7 @@ export default function UserDashboard() {
             </AnimatePresence>
 
             {/* Desktop Sidebar */}
-            <aside className="w-56 hidden md:flex flex-col justify-between bg-white shadow-lg px-6 py-8 border-r border-gray-200">
+            <aside className="w-56 hidden md:flex flex-col justify-between bg-white shadow-lg px-6 py-8 border-r border-gray-300">
                 <div>
                     <h2 className="text-xl font-bold text-blue-600 mb-8">IoT Admin Panel</h2>
                     <nav className="space-y-5">
@@ -134,13 +232,21 @@ export default function UserDashboard() {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="mb-6"
+                    className="mb-6 flex justify-between"
                 >
-                    <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome {user.details?.name}</h1>
-                    <p className="text-sm text-gray-500">{user.details?.registeredAt}</p>
+                    <div className="">
+                        <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome {user.details?.name}</h1>
+                        <p className="text-sm text-gray-500">{user.details?.registeredAt}</p>
+                    </div>
+                    {/* Example: Display WebSocket status and messages */}
+                    <div className="mt-4">
+                        <div>Status: {wsStatus}</div>
+                        <ul>{wsMessages.map((m, i) => <li key={i}>{JSON.stringify(m)}</li>)}</ul>
+                    </div>
                 </motion.div>
 
                 <Outlet />
+
 
             </main>
             < ToastContainer position="top-right" autoClose={3000}

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearMessageModalUpdate, newMessageModalUpdateR, toggleNewMessageModal } from "../store/slice/themeSlice";
+import { clearMessageModalUpdate, toggleNewMessageModal } from "../store/slice/themeSlice";
 import { UploadCloud } from "lucide-react";
 import { sendMessage, updateMessage } from "../store/slice/messageSlice";
+import { motion } from "framer-motion";
 
 export default function PostMessageModal() {
   const { newMessageModal, newMessageModalUpdate } = useSelector(state => state.theme);
@@ -25,8 +26,6 @@ export default function PostMessageModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submition")
-    console.log(message)
     if (message.length < 5 || message.length > 30) {
       setError("Message must be between 5 and 30 characters.");
       return;
@@ -43,9 +42,14 @@ export default function PostMessageModal() {
     dispatch(clearMessageModalUpdate())
     setMessage(""); // Optionally clear the message
   };
-  console.log(newMessageModalUpdate)
 
   return (
+    <motion.div
+      className="overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
         <button
@@ -88,6 +92,6 @@ export default function PostMessageModal() {
           </div>
         </form>
       </div>
-    </div>
+      </div></motion.div>
   );
 }
