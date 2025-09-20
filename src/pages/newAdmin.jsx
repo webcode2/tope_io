@@ -98,6 +98,7 @@ export default function UserDashboard() {
                         // handle direct message
                         break;
                     case "heart_beat":
+                        console.log(data)
                         dispatch(updateDeviceStatus(data));
                         break;
                     default:

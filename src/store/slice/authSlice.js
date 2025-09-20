@@ -105,7 +105,7 @@ const authSlice = createSlice({
         logOut: (state,) => {
             deleteLocalStorage("userDetails")
             return state = initialState
-        },
+        },      
 
         clearError: (state) => { state.error = null },
 
