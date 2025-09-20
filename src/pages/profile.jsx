@@ -17,11 +17,30 @@ function Profile() {
 
     // Sync devices function
     const handleSync = (deviceId) => {
+        console.log(deviceId)
         wsClient.send({
-            event: "direct_message",
+            event: "sync_device",
             data: {
-                recipientId: deviceId, message: { action: "sync_device", }
+                recipientId: deviceId,
+                message: { action: "sync_device", }
             }
+
+
+
+
+        });
+    };
+    const handleReboot = (deviceId) => {
+        console.log(deviceId)
+        wsClient.send({
+            event: "reboot",
+            data: {
+                recipientId: deviceId,
+                message: { action: "reboot", }
+            }
+
+
+
 
         });
     };
@@ -170,7 +189,17 @@ function Profile() {
 
                                                 )}
 
-                                                <button onClick={() => handleSync(device.id)} className="px-2 bg-amber-500 py-1  rounded">Sync devices</button>
+                                                <button onClick={() => handleSync(device.id)} className="cursor-pointer py-2 px-2 bg-amber-500   rounded">Sync devices</button>
+
+
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 ">
+                                            <div className="flex">
+
+
+
+                                                <button onClick={() => handleReboot(device.id)} className="cursor-pointer py-2 px-2 bg-red-600  rounded">Reboot Device</button>
                                             </div>
                                         </td>
                                     </tr>

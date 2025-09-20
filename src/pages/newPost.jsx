@@ -18,7 +18,8 @@ export default function PostMessage() {
             // Optionally dispatch an action to fetch messages
             dispatch(fetchMessages());
         }
-    }, [dispatch, messages.length, isLoading]);
+    }, [dispatch]);
+
     console.log(messages)
     return (
         <div className="">

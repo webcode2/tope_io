@@ -120,7 +120,7 @@ export default function UserDashboard() {
             if (wsClient) wsClient.close();
             if (retryTimeout) clearTimeout(retryTimeout);
         };
-    }, [isAuthenticated, wsUrl, user.details?.id, user.details?.account_id]);
+    }, [wsUrl, user.details?.id, user.details?.account_id]);
 
     // Resposible for checkmating gthe devices
 
@@ -132,7 +132,7 @@ export default function UserDashboard() {
                 "event": "heart_beat",
                 "data": { user: data, devices: ids }
             })
-        }, 5000); // every 10 seconds
+        }, 10000); // every 10 seconds
         return () => {
             clearInterval(pingIntervalRef.current);
         }

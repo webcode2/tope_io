@@ -12,6 +12,8 @@ function DashBoardIndex() {
     // Get messages from Redux store
     const messages = useSelector(state => state.message.messages);
     const isLoading = useSelector(state => state.message.isLoading);
+  
+  
     useEffect(() => {
 
         // Fetch messages or perform any side effects here
@@ -19,7 +21,9 @@ function DashBoardIndex() {
             // Optionally dispatch an action to fetch messages
             dispatch(fetchMessages());
         }
-    }, [dispatch, messages.length, isLoading]);
+    }, [dispatch,]);
+
+    
     return (
         <div className="space-y-7">
             <Card title="Summary">
