@@ -111,6 +111,8 @@ const authSlice = createSlice({
 
         updateDeviceStatus: (state, action) => {
             console.log("::::::::::::::::::::::::::::::::::::")
+            console.log(action.payload)
+            console.log("::::::::::::::::::::::::::::::::::::")
             const devicesToUpdate = action.payload; // [{ deviceId, status }]
 
             devicesToUpdate.forEach(({ deviceId, status }) => {
