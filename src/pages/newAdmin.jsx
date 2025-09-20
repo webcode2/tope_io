@@ -34,7 +34,7 @@ export default function UserDashboard() {
     const [wsMessages, setWsMessages] = useState([]);
     const [wsStatus, setWsStatus] = useState('disconnected');
 
-    const wsUrl = `ws://localhost:4000/ws?token=${user.details?.token || ''}`;
+    const wsUrl = `ws://iot-server-websocket.onrender.com/ws?token=${user.details?.token || ''}`;
     const wsClientRef = useRef(null);
     const pingIntervalRef = useRef(null);
 

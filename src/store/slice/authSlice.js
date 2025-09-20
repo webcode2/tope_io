@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from "axios";
 
-const SERVER_URL = `http://localhost:4000/`
+// const SERVER_URL = `http://localhost:4000/`
+const SERVER_URL = `https://iot-server-websocket.onrender.com/`
 
 
 // Thunk to fetch data from API

@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const SERVER_URL = `http://localhost:4000/`;
+// const SERVER_URL = `http://localhost:4000/`;
+const SERVER_URL = `https://iot-server-websocket.onrender.com/`
 
 // Async thunk to send a message
 export const sendMessage = createAsyncThunk(

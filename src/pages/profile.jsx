@@ -12,7 +12,7 @@ function Profile() {
     const userDetails = useSelector(state => state.auth.user?.details);
     const { items, isLoading, error } = useSelector(state => state.auth.devices);
 
-    const wsUrl = `ws://localhost:4000/ws?token=${userDetails?.token || ''}`;
+    const wsUrl = `ws://iot-server-websocket.onrender.com/ws?token=${userDetails?.token || ''}`;
     const wsClient = getWebSocketClient(wsUrl);
 
     // Sync devices function
