@@ -12,7 +12,7 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import PostMessageModal from "../components/newPostModal";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { checkIfAuthenticated, updateDeviceStatus } from "../store/slice/authSlice";
+import { checkIfAuthenticated, logOut, updateDeviceStatus } from "../store/slice/authSlice";
 import getWebSocketClient from '../websocket/websocketClient';
 
 const navItems = [
@@ -179,7 +179,7 @@ export default function UserDashboard() {
                                 ))}
                             </nav>
                         </div>
-                        <button className="flex items-center space-x-2 text-red-500 hover:text-red-600 text-sm">
+                        <button onClick={() => { dispatch(logOut()) }} className="flex items-center space-x-2 text-red-500 hover:text-red-600 text-sm">
                             <LogOut size={18} />
                             <span>Logout</span>
                         </button>

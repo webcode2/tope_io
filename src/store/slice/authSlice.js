@@ -76,6 +76,11 @@ const saveToLocalStorage = ({ name, _ }) => {
     localStorage.setItem(name, JSON.stringify(_))
 }
 
+const deleteLocalStorage = (name) => {
+    localStorage.removeItem(name)
+}
+
+
 const initialState = {
     isAuthenticated: false,
     user: { details: null, device: [] }, // <-- Ensure device is in user
@@ -97,7 +102,11 @@ const authSlice = createSlice({
         busyAccount: (state, action) => { action.payload === undefined ? state.isLoading = true : state.isLoading = action.payload },
         setUser: (state, action) => { state.user = action.payload },
 
-        logOut: (state,) => { return state = initialState },
+        logOut: (state,) => {
+            deleteLocalStorage("userDetails")
+            return state = initialState
+        },
+
         clearError: (state) => { state.error = null },
 
         updateDeviceStatus: (state, action) => {
