@@ -110,41 +110,21 @@ const authSlice = createSlice({
         clearError: (state) => { state.error = null },
 
         updateDeviceStatus: (state, action) => {
-
-            const devicesToUpdate = action.payload; // This is an array
+            console.log("::::::::::::::::::::::::::::::::::::")
+            const devicesToUpdate = action.payload; // [{ deviceId, status }]
 
             devicesToUpdate.forEach(({ deviceId, status }) => {
+                const deviceIndex = state.devices.items.findIndex((d) => d.id === deviceId);
 
-                const device = state.devices.items.find((d) => d.id === deviceId);
-
-                if (device) {
-                    device.status = status;
+                if (deviceIndex !== -1) {
+                    state.devices.items[deviceIndex].status = status;
+                } else {
+                    // Optional: add device if not present
+                    state.devices.items.push({ id: deviceId, status });
                 }
-            })
+            });
+        },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
     },
     extraReducers: (builder) => {
         builder
